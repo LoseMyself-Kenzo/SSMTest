@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 对sql进行分类化管理,sql隔离 -->
+<mapper namespace="cn.zpf.mapper.UserMapper">
+    <resultMap type="cn.zpf.dto.Actor" id="ActorDTO">
+        <!--主键需要使用id标签对应,其余使用result对应-->
+        <id column="actor_id" property="actorId"/>
+        <result column="FIRST_NAME" property="firstName"/>
+        <result column="LAST_NAME" property="lastName"/>
+        <result column="LAST_UPDATE" property="lastUpdate"/>
+    </resultMap>
+    <!--
+     #{}:表示一个占位符,
+     #{id}:id表示接受输入的参数,参数就是id,如果输入的参数是简单类型,#{}中参数名可以任意
+     命名可以写成value或其他
+     -->
+    <select id="findActorById" resultMap="ActorDTO">
+        SELECT * FROM actor WHERE actor_id =#{VALUE}
+    </select>
+    <!--
+    ${}:表示拼接符号,resultType为DTO可以用来返回List
+    当传入值为简单数据类型时 命名只可为${value}不可为其他的
+    -->
+    <select id="findActorByName" resultMap="ActorDTO" parameterType="java.lang.String">
+        SELECT  * FROM actor WHERE First_name LIKE '%${value}%'
+    </select>
+
+    <!--
+    Mysql last_insert_id()获取插入后的主键,只使用与自增主键.
+    keyProperty:将查询到的自增主键设置到指定对象的属性.
+    order:相对于sql语句的执行顺序
+    LAST_INSERT_ID():获取自增ID的函数
+    -->
+    <insert id="insertActor" parameterType="cn.zpf.dto.Actor">
+        <selectKey keyProperty="actorId" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into actor(first_name,Last_name,last_update)
+        VALUE (#{firstName},#{lastName},CURRENT_TIMESTAMP)
+    </insert>
+    <!--
+   使用mysql的uuid()生成主键
+   首先执行uuid()获得主键,将主键设置到Actor对象的actor_id属性中
+   在insert执行时,从中取出值,需将id类型定义为String
+   对于Oracle 用序列名.nextval();
+   -->
+    <insert id="insertActorN" parameterType="cn.zpf.dto.Actor">
+        <selectKey keyProperty="actorId" order="BEFORE" resultType="java.lang.String">
+            SELECT UUID();
+            SELECT 序列名.nextval();
+        </selectKey>
+        insert into actor(actor_id,first_name,Last_name,last_update)
+        VALUE (#{actorId},#{firstName},#{lastName},CURRENT_TIMESTAMP)
+    </insert>
+    <delete id="myDelete">
+        DELETE FROM ACTOR where actor_id = #{id}
+    </delete>
+    <update id="myUpdate" parameterType="cn.zpf.dto.Actor">
+        UPDATE actor SET first_name = #{firstName},last_name = #{lastName},last_update = CURRENT_TIMESTAMP
+        WHERE actor_id = #{actorId}
+    </update>
+</mapper>
