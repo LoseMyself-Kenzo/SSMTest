@@ -17,7 +17,7 @@
      命名可以写成value或其他
      -->
     <select id="findActorById" resultMap="ActorDTO">
-        SELECT * FROM actor WHERE actor_id =#{VALUE}
+        SELECT * FROM actor WHERE actor_id =#{id}
     </select>
     <!--
     ${}:表示拼接符号,resultType为DTO可以用来返回List

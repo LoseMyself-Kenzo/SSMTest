@@ -3,28 +3,54 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+    
+    <!-- 1.加载属性文件 -->
+    <properties resource="db.properties">
+        <!-- 配置属性名和属性值,该标签内属性首先被读取 -->
+        <!-- 优先读取properties，其次url和resource最后读取parameterType传递的属性。优先级而言是反过来的 -->
+        <!-- <property name="" value=""/>所以一般不定义在这里，只定义在properties中且命名要有一定的特殊性 -->
+    </properties>
+
+   <!-- 2.全局参数配置，开启二级缓存，延迟加载等等
+    <settings>
+        <setting name="" value=""/>
+    </settings>-->
+
+    <!-- 3.别名 重点
+    mapper.xml中，定义很多statement.需要指定很多参数类型.默认支持基本类型及其包装类_int表示int，int表示Integer
+        <typeAliases>
+            &lt;!&ndash; 批量扫描指定包别名 &ndash;&gt;
+            <package name="cn.zpf.dto"/>
+            &lt;!&ndash; 单个命名 &ndash;&gt;
+            &lt;!&ndash;<typeAlias type="cn.zpf.dto.Actor" alias="actor"/>&ndash;&gt;
+        </typeAliases> -->
+    <!--4.类型处理器-->
+    <!--<typeHandlers></typeHandlers>-->
+    <!--5.对象工厂<objectFactory type=""/>-->
+    <!--6.插件
+    <plugins>
+        <plugin interceptor=""></plugin>
+    </plugins>-->
+    <!--7.环境集合属性对象-->
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
-                <!--
-
-                
-                -->
                 <property name="driver" value="${jdbc.driver}"/>
                 <property name="url" value="${jdbc.url}"/>
-                <property name="username" value="${jdbc.name}"/>
+                <property name="username" value="${jdbc.username}"/>
                 <property name="password" value="${jdbc.password}"/>
             </dataSource>
         </environment>
     </environments>
 
-    <!--加载配置文件-->
+    <!-- 加载配置文件 映射器-->
     <mappers>
+    <!-- 单个映射文件 url完全限定名 class调用mapper接口前提是接口与xml在同一包下
         <mapper resource="cn/zpf/mapper/UserMapper.xml"/>
+        <mapper class="cn.zpf.mapper.UserMapper"/>
+     -->
+        <!--批量加载的包名-->
+        <package name="cn.zpf.mapper"/>
     </mappers>
-    <!--  <typeAliases>
-          &lt;!&ndash; 批量扫描别名 &ndash;&gt;
-          <package name="cn.ssm.po"/>
-      </typeAliases>-->
 </configuration>

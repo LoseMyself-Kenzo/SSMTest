@@ -19,9 +19,6 @@ import java.util.List;
  */
 public class MybatisFirst {
 
-
-
-
     @Test
     // 单条查询
     public void findUserByIdTest() throws IOException {
