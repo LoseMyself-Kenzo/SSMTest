@@ -11,6 +11,47 @@
         <result column="LAST_NAME" property="lastName"/>
         <result column="LAST_UPDATE" property="lastUpdate"/>
     </resultMap>
+
+
+<!--    id：sql片段的唯一标识
+    经验：是基于单表来定义sql片段，这样的话这个sql片段可重用性才高
+    不要包含<where>
+-->
+    <sql id="query_actor">
+        <if test="actorId!=null">
+            AND actor_id = #{actorId}
+        </if>
+        <if test="firstName!=null">
+            AND first_name like '%${firstName}%'
+        </if>
+        /*
+          使用foreach遍历传入ids
+          collection:只输入对象中的 集合List 属性
+          item：每个遍历生成对象中
+          open：开始遍历时拼接的串
+          close：结束遍历时拼接的串
+          separator：遍历的两个对象中需要拼接的串
+        */
+        <!-- AND (id=1 OR id=10 OR id = 16)
+        <foreach collection="ids" item="actor_id" open="AND(" close=")" separator="or">
+            id = #{actor_id}
+        </foreach>
+        AND id IN(1,10,16)
+        <foreach collection="ids" item="actor_id" open="AND id IN(" close=")" separator=",">
+           #{actor_id}
+        </foreach>
+
+        -->
+    </sql>
+    <!--引用sql片段的id，如果refid指定的id不在本mapper文件中，需要前边加namespace-->
+    <select id="findActorDto" parameterType="cn.zpf.dto.Actor" resultMap="ActorDTO">
+        SELECT * FROM actor
+        <where>
+            <include refid="query_actor"></include>
+            <!--在这里还要引用其他的sql片段，所以不包含<where>-->
+        </where>
+    </select>
+
     <!--
      #{}:表示一个占位符,
      #{id}:id表示接受输入的参数,参数就是id,如果输入的参数是简单类型,#{}中参数名可以任意
@@ -26,7 +67,6 @@
     <select id="findActorByName" resultMap="ActorDTO" parameterType="java.lang.String">
         SELECT  * FROM actor WHERE First_name LIKE '%${value}%'
     </select>
-
     <!--
     Mysql last_insert_id()获取插入后的主键,只使用与自增主键.
     keyProperty:将查询到的自增主键设置到指定对象的属性.

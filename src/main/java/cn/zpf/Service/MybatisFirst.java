@@ -37,6 +37,25 @@ public class MybatisFirst {
     }
 
     @Test
+    public void findActorDto() throws IOException{
+
+        String resource = "sqlMapConfig.xml";
+
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        // selectOne查询单条指定数据
+
+        Actor actor = new Actor().setFirstName("111");
+        List<Actor> act = sqlSession.selectList("cn.zpf.mapper.UserMapper.findActorDto",actor);
+        System.out.println(act.toString());
+        sqlSession.close();
+
+    }
+
+    @Test
     // 多条查询
     public void findActorByName() throws IOException {
         String resource = "sqlMapConfig.xml";
