@@ -2,15 +2,18 @@
 <!DOCTYPE configuration
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
 <configuration>
-    
     <!-- 1.加载属性文件 -->
     <properties resource="db.properties">
         <!-- 配置属性名和属性值,该标签内属性首先被读取 -->
         <!-- 优先读取properties，其次url和resource最后读取parameterType传递的属性。优先级而言是反过来的 -->
         <!-- <property name="" value=""/>所以一般不定义在这里，只定义在properties中且命名要有一定的特殊性 -->
     </properties>
-
+    <!--开启二级缓存-->
+    <settings>
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
    <!-- 2.全局参数配置，开启二级缓存，延迟加载等等
     <settings>
         <setting name="" value=""/>

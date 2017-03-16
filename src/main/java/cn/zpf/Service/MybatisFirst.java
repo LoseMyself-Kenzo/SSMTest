@@ -23,7 +23,7 @@ public class MybatisFirst {
     // 单条查询
     public void findUserByIdTest() throws IOException {
 
-        String resource = "sqlMapConfig.xml";
+        String resource = "Mybatis/sqlMapConfig.xml";
 
         InputStream inputStream = Resources.getResourceAsStream(resource);
 

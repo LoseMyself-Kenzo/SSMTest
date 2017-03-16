@@ -4,6 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <!-- 对sql进行分类化管理,sql隔离 -->
 <mapper namespace="cn.zpf.mapper.UserMapper">
+
+    <!--开启本mapper的namespace下的二级缓存-->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+
     <resultMap type="cn.zpf.dto.Actor" id="ActorDTO">
         <!--主键需要使用id标签对应,其余使用result对应-->
         <id column="actor_id" property="actorId"/>
